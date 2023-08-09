@@ -22,8 +22,8 @@ export class UserAuth extends BaseEntity {
   })
   password: string;
 
-  @Column( {type: 'enum', enum: ROLES, default: ROLES.User })
-  roles: ROLES[];
+  @Column( 'simple-array' )
+  roles: string[];
   
   @Column({ default: true})
   IsActive: boolean;

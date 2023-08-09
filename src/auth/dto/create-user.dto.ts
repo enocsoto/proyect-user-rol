@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { ROLES } from 'src/constants/roles';
 
 export class CreateUserDto {
@@ -25,5 +25,9 @@ export class CreateUserDto {
   @IsString()
   @MinLength(1)
   username: string;
+
+  @IsArray()
+  @IsEnum(ROLES, {each: true})
+  roles: ROLES[] = [ROLES.User];
 
 }
