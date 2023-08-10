@@ -1,4 +1,10 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class LoginUserDto {
   @IsEmail()
@@ -12,5 +18,4 @@ export class LoginUserDto {
       'The password must have a Uppercase, lowercase letter and a number',
   })
   password: string;
-
 }

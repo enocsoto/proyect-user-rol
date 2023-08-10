@@ -1,7 +1,6 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 
 import { BaseEntity } from 'src/config/base.entity';
-import { ROLES } from 'src/constants/roles';
 
 @Entity({ name: 'auth' })
 export class UserAuth extends BaseEntity {
@@ -22,10 +21,10 @@ export class UserAuth extends BaseEntity {
   })
   password: string;
 
-  @Column( 'simple-array' )
+  @Column('simple-array')
   roles: string[];
-  
-  @Column({ default: true})
+
+  @Column({ default: true })
   IsActive: boolean;
 
   @BeforeInsert()

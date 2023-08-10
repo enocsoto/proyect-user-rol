@@ -1,3 +1,1 @@
-export { UserAuth } from "./auth.entity";
-// export { Role } from "./role.entity";
-
+export { UserAuth } from './auth.entity';

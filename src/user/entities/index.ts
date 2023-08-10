@@ -1,3 +1,2 @@
-export { UserEntity } from "./user.entity";
-export { UsersProjects } from "./usersProjects.entity";
-
+export { UserEntity } from './user.entity';
+export { UsersProjects } from './usersProjects.entity';

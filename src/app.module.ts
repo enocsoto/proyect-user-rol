@@ -12,10 +12,10 @@ import { ProjectsModule } from './projects/projects.module';
       envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({...dataSourceOptions}),
+    TypeOrmModule.forRoot({ ...dataSourceOptions }),
     AuthModule,
     UserModule,
-    ProjectsModule,],
-
+    ProjectsModule,
+  ],
 })
 export class AppModule {}
