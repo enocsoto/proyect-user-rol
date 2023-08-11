@@ -1,28 +1,30 @@
 version: '3.0'
 
 services:
-  backendRolesUsers:
-    depends_on:
-      - db
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: users-roles
-    container_name: userRoles
-    restart: always
-    ports:
-      - "${PORT}:${PORT}"
-     
-  db:
+  mysqldb:
     image: mysql:8.0
-    container_name: mysqlcompose
+    container_name: mysqldb
     restart: always
+    env_file: ./.env.prod
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3310:3306"
-    
-    
+      - "${DB_PORT}:${DB_PORT}"
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: app
+    container_name: app
+    restart: always
+    env_file: ./.env.prod
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb
+    ports:
+      - "${PORT}:${PORT}"
