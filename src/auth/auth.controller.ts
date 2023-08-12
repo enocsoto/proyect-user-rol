@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   @Get('prueba')
-  @Auth(ValidRoles.Admin)
+  @Auth(ValidRoles.Admin, ValidRoles.SuperUser)
   testingPrivateRoute(@GetUser() user: UserAuth) {
     return {
       ok: true,

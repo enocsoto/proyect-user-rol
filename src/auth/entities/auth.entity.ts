@@ -1,6 +1,7 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseEntity } from 'src/config/base.entity';
+import { Projects } from 'src/projects/entities/project.entity';
 
 @Entity({ name: 'auth' })
 export class UserAuth extends BaseEntity {
@@ -27,9 +28,14 @@ export class UserAuth extends BaseEntity {
   @Column({ default: true })
   IsActive: boolean;
 
+  @OneToMany(() => Projects, (project) => project.projectManager)
+  projects: Projects[];
+  
   @BeforeInsert()
   checkFiledsBeforeInsert() {
     this.email = this.email.toLocaleLowerCase().trim();
+    this.username = this.username.toLocaleLowerCase().trim();
+    this.roles = this.roles.map((role)=> role.toLocaleLowerCase().trim());
   }
 
   @BeforeUpdate()

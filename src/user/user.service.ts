@@ -1,7 +1,5 @@
 import {
-  BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,25 +8,28 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorManager } from 'src/common/error.manager';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
+  
   async create(createUserDto: CreateUserDto) {
     try {
-      const user = this.userRepository.create(createUserDto);
-      if (!user)
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: "User don't createdon DB",
-        });
+      const {password, ...userData} = createUserDto
+      const user = this.userRepository.create({
+        ...userData,
+        password: bcrypt.hashSync(password, 8)
+      });
       await this.userRepository.save(user);
+      delete user.password;
       return user;
     } catch (error) {
-      throw new ErrorManager.createError(error.message);
+      throw new ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -42,7 +43,7 @@ export class UserService {
         });
       return user;
     } catch (error) {
-      throw new ErrorManager.createError(error.message);
+      throw new ErrorManager.createSignatureError(error.message);
     }
   }
 

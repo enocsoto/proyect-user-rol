@@ -41,5 +41,5 @@ $ npm run test:cov
 ## Docker Run
 
 ```
-docker-compose -f docker-compose.prod.yaml --env-file .env.prod up --build
+docker-compose -f docker-compose.prod.yaml --env-file .dev.env up --build
 ```

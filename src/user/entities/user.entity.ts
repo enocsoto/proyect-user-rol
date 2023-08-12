@@ -1,8 +1,9 @@
 import { BaseEntity } from '../../config/base.entity';
 import { IUser } from '../../interfaces/user.interface';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
-import { UsersProjects } from './usersProjects.entity';
+//import { UsersProjects } from './usersProjects.entity';
 import { ValidRoles } from '../../constants/valid-roles';
+import { Projects } from 'src/projects/entities/project.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity implements IUser {
@@ -33,8 +34,8 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ type: 'enum', enum: ValidRoles })
   role: ValidRoles;
 
-  @OneToMany(() => UsersProjects, (usersProjects) => usersProjects.user)
-  projectsIncludes: UsersProjects[];
+  @OneToMany(() => Projects, (project) => project.projectManager)
+  projects: Projects[];
 
   @BeforeInsert()
   checkFiledsBeforeInsert() {

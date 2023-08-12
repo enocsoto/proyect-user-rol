@@ -1,15 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserAuth } from './entities/auth.entity';
 import * as bcrypt from 'bcrypt';
-import { ErrorManager } from 'src/common/error.manager';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger('AuthService');
   public get userRepository(): Repository<UserAuth> {
     return this._userRepository;
   }
@@ -31,7 +31,7 @@ export class AuthService {
       delete user.password;
       return { ...user, token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
-      throw ErrorManager.createError(error.message);
+      throw this.handleDBExceptions(error.message)
     }
   }
 
@@ -49,7 +49,7 @@ export class AuthService {
 
       return { ...user, token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
-      throw ErrorManager.createError(error.message);
+     this.handleDBExceptions(error)
     }
   }
 
@@ -57,5 +57,14 @@ export class AuthService {
     //generar el token
     const token = this.jwtService.sign(payload);
     return token;
+  }
+
+  private handleDBExceptions(error: any) {
+    if (error.code === 'ER_DUP_ENTRY') throw new BadRequestException(error.detail);
+    console.log(error.code)
+    this.logger.error(error);
+    throw new InternalServerErrorException(
+      `Unexpected error, check server logs`,
+    );
   }
 }
